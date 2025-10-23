@@ -5,19 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Datos Bancarios QR</title>
   <style>
-    body { font-family: system-ui; text-align: center; padding: 40px; background: #f8f9fa; }
-    .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: inline-block; }
-    button { margin-top: 20px; padding: 10px 20px; border: none; background: #007bff; color: white; border-radius: 8px; cursor: pointer; }
-    button:hover { background: #0056b3; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f4f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 16px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: #333333;
+    }
+
+    .info {
+      text-align: left;
+      margin: 20px 0;
+    }
+
+    .info p {
+      margin: 8px 0;
+      font-size: 16px;
+      color: #555555;
+    }
+
+    .info b {
+      color: #222222;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    @media(max-width: 450px) {
+      .card {
+        padding: 20px;
+      }
+      .info p {
+        font-size: 14px;
+      }
+      button {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <h2>Datos Bancarios</h2>
-  <div id="dataCard" class="card">
-    <p><b>Banco:</b> <span id="bankName"></span></p>
-    <p><b>Cuenta:</b> <span id="accountNumber"></span></p>
-    <p><b>Titular:</b> <span id="holderName"></span></p>
+  <div class="card">
+    <h2>Datos Bancarios</h2>
+    <div class="info">
+      <p><b>Banco:</b> <span id="bankName">-</span></p>
+      <p><b>Cuenta:</b> <span id="accountNumber">-</span></p>
+      <p><b>Titular:</b> <span id="holderName">-</span></p>
+    </div>
     <button id="copyBtn">Copiar Datos</button>
   </div>
 
@@ -25,7 +91,6 @@
     import { db } from "./firebase.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    // Obtener el ID del QR desde la URL, por ejemplo ?id=abc123
     const params = new URLSearchParams(window.location.search);
     const qrId = params.get("id");
 
@@ -56,6 +121,5 @@
 
     loadData();
   </script>
-
 </body>
 </html>
