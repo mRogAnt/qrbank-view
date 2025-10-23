@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datos Bancarios QR</title>
+  <style>
+    body { font-family: system-ui; text-align: center; padding: 40px; background: #f8f9fa; }
+    .card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: inline-block; }
+    button { margin-top: 20px; padding: 10px 20px; border: none; background: #007bff; color: white; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+
+  <h2>Datos Bancarios</h2>
+  <div id="dataCard" class="card">
+    <p><b>Banco:</b> <span id="bankName"></span></p>
+    <p><b>Cuenta:</b> <span id="accountNumber"></span></p>
+    <p><b>Titular:</b> <span id="holderName"></span></p>
+    <button id="copyBtn">Copiar Datos</button>
+  </div>
+
+  <script type="module">
+    import { db } from "./firebase.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // Obtener el ID del QR desde la URL, por ejemplo ?id=abc123
+    const params = new URLSearchParams(window.location.search);
+    const qrId = params.get("id");
+
+    async function loadData() {
+      if (!qrId) {
+        alert("Código QR inválido o sin datos asociados.");
+        return;
+      }
+
+      const docRef = doc(db, "qrData", qrId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        document.getElementById("bankName").textContent = data.bank;
+        document.getElementById("accountNumber").textContent = data.account;
+        document.getElementById("holderName").textContent = data.holder;
+
+        document.getElementById("copyBtn").addEventListener("click", () => {
+          const fullData = `Banco: ${data.bank}\nCuenta: ${data.account}\nTitular: ${data.holder}`;
+          navigator.clipboard.writeText(fullData);
+          alert("Datos copiados al portapapeles ✅");
+        });
+      } else {
+        alert("No se encontraron datos para este código QR.");
+      }
+    }
+
+    loadData();
+  </script>
+
+</body>
+</html>
